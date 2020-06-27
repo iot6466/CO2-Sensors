@@ -27,27 +27,11 @@ def main():
     retry = 19
     voc   = 0
     co2   = 400
-#    resistor_value = 0
     data_r = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
     while (retry > 0) and (crc != data_r[6]):
         retry = retry - 1
 
-#        data_r = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-#        data_w = [0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-#        data_w[6] = crc_calc(data_w)
-#        res = i2c.write_i2c_block_data(sensor, data_w[0], data_w[1:6])
-#        time.sleep(0.01)
-#        data_r[0] = i2c.read_byte(sensor)
-#        data_r[1] = i2c.read_byte(sensor)
-#        data_r[2] = i2c.read_byte(sensor)
-#        data_r[3] = i2c.read_byte(sensor)
-#        data_r[4] = i2c.read_byte(sensor)
-#        data_r[5] = i2c.read_byte(sensor)
-#        data_r[6] = i2c.read_byte(sensor)
-#        resistor_value = 10 * (data_r[4] + (256 * data_r[3]) + (65536 * data_r[2]));
-#        time.sleep(0.01)
-
-#        data_r = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        dt = datetime.now().isoformat(' ')
         data_w = [0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         data_w[6] = crc_calc(data_w)
         res = i2c.write_i2c_block_data(sensor, data_w[0], data_w[1:6])
@@ -60,11 +44,9 @@ def main():
         data_r[5] = i2c.read_byte(sensor)
         data_r[6] = i2c.read_byte(sensor)
        
-        dt = datetime.now().isoformat(' ')
         voc = (data_r[0] - 13) * (1000 / 229) 
         co2 = (data_r[1] - 13) * (1600 / 229) + 400
         crc = crc_calc(data_r)
-#        print co2, voc, data_r, crc, resistor_value
         print co2, voc, data_r, crc
         if (crc != data_r[6]):
             i2c = smbus.SMBus(1)
